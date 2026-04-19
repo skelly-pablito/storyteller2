@@ -1,13 +1,56 @@
+<?php
+    session_start();
+
+    if(!isset($_SESSION["login"])){
+        header("Location: loginForm.php");
+    }
+?>
+
 <!DOCTYPE html>
 <html>
     <head> 
+		<!--Versione: 1.1>
+        <!--Sfondo da https://tiled-bg.blogspot.com/2013/03/green-stone-seamless-web-texture.html -->
         <meta charset="utf-8">
         <title>Storyteller</title>
         <link rel="stylesheet" href="w3.css">
+        <style>
+            body, h1, h2, h3, h4, h5, h6 {
+                 font-family: Georgia, serif;
+            }
+            body {
+                background-image: url("green-stone-seamless-web-texture.jpg");
+                background-repeat: repeat;
+            }
+        </style>
     </head> 
     <body>
-        <h1>Accesso effetuato!</h1>
-        <p>La homepage non è ancora implementata</p>
-        <a href="loginForm.php"><button>Torna indietro</button></a>
+        <div class="w3-container w3-light-green">
+            <h2 class="w3-left">Storyteller</h2>
+            <div class="w3-right"> 
+                <a href="logout.php" class="w3-button"> <img width="25px" height="25px" src="box-arrow-right.svg"> </a>
+
+            </div>
+        </div>
+
+        <div class="w3-container w3-margin-top w3-margin-left"> 
+            <h1> Benvenuto, <?php echo $_SESSION["user"]["username"]; ?></h1>
+
+        </div>
+
+        <div class="w3-container w3-margin-top w3-margin-left"> 
+            <h3> Le tue campagne </h3> <hr>
+
+        </div>
+
+        <div class="w3-container w3-margin-top w3-margin-left"> 
+            <h3> Campagne a cui partecipi </h3> <hr>
+            
+
+        </div>
+
+        <div class="w3-container w3-display-bottomleft w3-light-green">
+            <h6>Un progetto di Paolo Colombo</h6>
+        </div>
     </body>
-</html>
+</html> 

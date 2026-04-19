@@ -1,5 +1,6 @@
 <?php
     include "connect.php";
+    session_start(); 
 
     if(isset($_POST)){
         $usr = $_POST["usr"];
@@ -18,6 +19,8 @@
                     $expire = time() + 86.400; 
                     setcookie("reminder", "1", $expire); 
                 }
+                $_SESSION["login"] = true; 
+                $_SESSION["user"] = $riga; 
                 header("Location: homepage.php");
              }else{
                 echo "Password errata"; 
