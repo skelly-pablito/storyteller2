@@ -2,9 +2,9 @@
     include "connect.php";
     
     //Cookie per ricodare accesso (non implementato)
-    /*if(isset($_COOKIE["remember"]))
+    if(isset($_COOKIE["reminder"]))
         header("Location: homepage.php");
-        */
+        
 ?>
 <!DOCTYPE html>
 <html>
