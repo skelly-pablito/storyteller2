@@ -4,6 +4,22 @@
     if(!isset($_SESSION["login"])){
         header("Location: loginForm.php");
     }
+    include "connect.php"; 
+    function showCampagne(){
+        global $conn; 
+        $user = $_SESSION["user"]["username"]; 
+        $sql = "SELECT titolo FROM avventure WHERE id_master=?"; 
+        $stmt = mysqli_prepare($conn, $sql); 
+        mysqli_stmt_bind_param($stmt, "s", $user);
+
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt); 
+        if(mysqli_num_rows($res) > 0){
+            while($riga = $res->fetch_assoc()){
+                echo "<p><a href=''>".$riga["titolo"]."</a></p>";
+            }
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -35,18 +51,24 @@
 
         <div class="w3-container w3-margin-top w3-margin-left"> 
             <h1> Benvenuto, <?php echo $_SESSION["user"]["username"]; ?></h1>
-
         </div>
 
-        <div class="w3-container w3-margin-top w3-margin-left"> 
-            <h3> Le tue campagne </h3> <hr>
-
+        <!-- SEZIONE 1-->
+        <div class="w3-container w3-margin-top w3-margin-left" style="width:20%"> 
+            <h3> Le tue campagne 
+                <a href="formCampagna.php"><button class="w3-button w3-right"><b>+</b></button></a>
+            </h3>  <hr>
+        </div>
+        <div>
+            <?php showCampagne() ?>
         </div>
 
-        <div class="w3-container w3-margin-top w3-margin-left"> 
-            <h3> Campagne a cui partecipi </h3> <hr>
-            
 
+        <!-- SEZIONE 2 --> 
+        <div class="w3-container w3-margin-top w3-margin-left" style="width:20%"> 
+             <h3> Campagne a cui partecipi 
+                <a><button class="w3-button w3-right"><b>+</b></button></a>
+            </h3>  <hr>
         </div>
 
         <div class="w3-container w3-display-bottomleft w3-light-green">
