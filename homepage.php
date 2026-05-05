@@ -5,10 +5,10 @@
         header("Location: loginForm.php");
     }
     include "connect.php"; 
-    function showCampagne(){
+    function showCampagneMaster(){
         global $conn; 
         $user = $_SESSION["user"]["username"]; 
-        $sql = "SELECT titolo FROM avventure WHERE id_master=?"; 
+        $sql = "SELECT id, titolo, descrizione   FROM avventure WHERE id_master=?"; 
         $stmt = mysqli_prepare($conn, $sql); 
         mysqli_stmt_bind_param($stmt, "s", $user);
 
@@ -16,7 +16,10 @@
         $res = mysqli_stmt_get_result($stmt); 
         if(mysqli_num_rows($res) > 0){
             while($riga = $res->fetch_assoc()){
-                echo "<p><a href=''>".$riga["titolo"]."</a></p>";
+                echo "<div class='w3-card w3-padding w3-margin w3-light-green' style='width:400px;'>
+                            <p class='title'><a href='dettagliCampagna.php?id=".$riga["id"]."'>".$riga["titolo"]." </a></p>
+                            <p class='w3-opacity'>".$riga["descrizione"]."</p>
+                     </div>";
             }
         }
     }
@@ -30,6 +33,7 @@
         <meta charset="utf-8">
         <title>Storyteller</title>
         <link rel="stylesheet" href="w3.css">
+        <link rel="stylesheet" href="homestyles.css">
         <style>
             body, h1, h2, h3, h4, h5, h6 {
                  font-family: Georgia, serif;
@@ -59,8 +63,13 @@
                 <a href="formCampagna.php"><button class="w3-button w3-right"><b>+</b></button></a>
             </h3>  <hr>
         </div>
-        <div>
-            <?php showCampagne() ?>
+        <div class="w3-margin">
+            <!-- DIV ESEMPIO-->
+            <div class="w3-card w3-padding w3-margin w3-light-green" style="width:400px;">
+                <p class="title"><a href="">Titolo</a></p>
+                <p class="w3-opacity">Lorem ipsum dolor sit amet...</p>
+            </div>
+            <?php showCampagneMaster() ?>
         </div>
 
 
