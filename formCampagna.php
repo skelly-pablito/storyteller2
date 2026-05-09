@@ -25,6 +25,29 @@
                 resize: none;
             }
         </style>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script>
+            // AGGIUNGI VALIDA FORM 
+
+            function addPlayer(){
+                const input = document.getElementById("playerInput");
+                const player = input.value.trim();
+                if(player !== ""){
+                    $.post("controllaPlayer.php", {username: player}, function(data, status){
+                        if(data == "200"){
+                            const playerList = document.getElementById("players");
+                            const dispPlayers = document.getElementById("dispPlayers");
+                            playerList.value += player + ",";
+                            input.value = "";
+                            dispPlayers.innerHTML += "<li>" + player + "</li>";
+                        } else {
+                            alert("Il giocatore " + player + " non esiste.");           
+                        }
+                    }); 
+                }
+            }
+        </script>
     </head> 
     <body>
         <div class="w3-container w3-light-green">
@@ -41,8 +64,17 @@
                 
                 <h3> Inserisci i dettagli della campagna: </h3>
                 <form class="w3-container" action="creaCampagna.php" method="post">
-                    <label>Titolo della campagna:</label> <input class="w3-input" type="text" name="titolo"> <br>
+                    <label>Titolo della campagna:</label> <input class="w3-input" type="text" name="titolo" required> <br>
                     <label>Descrizione:</label> <textarea class="w3-input" maxlength="255" rows="5" name="desc"></textarea> <br>
+                    <label class="">Invita giocatore: </label>
+                    <div class="w3-flex" style="height:40px">
+                        <input class="w3-input" type="text" id="playerInput"> 
+                        <button class="w3-button w3-border w3-green" type="button" onclick="addPlayer()">Aggiungi</button>
+                    </div>
+                    <ul id="dispPlayers">
+
+                    </ul>
+                    <input type="hidden" name="players" id="players">
                     <button class="w3-button w3-border w3-margin w3-green" type="submit"> Crea </button>
                 </form>
             </div>

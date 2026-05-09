@@ -10,8 +10,14 @@
         
         $titolo = $_POST["titolo"]; 
         $descrizione = $_POST["desc"]; 
-        $user = $_SESSION["user"]["username"]; 
+        $user = $_SESSION["user"]["username"];
+        if(isset($_POST["players"]) && !empty($_POST["players"])){
+            $players = explode(",", $_POST["players"]);
+        } else {
+            $players = array();
+        }
 
+   
         $sql = "INSERT INTO avventure (titolo, descrizione, id_master) VALUES (?,?,?)"; 
         $stmt = mysqli_prepare($conn, $sql); 
         mysqli_stmt_bind_param($stmt, "sss", $titolo, $descrizione, $user); 
@@ -20,6 +26,17 @@
         if(mysqli_error($conn)){
 
         }else{
+            //get ID campagna
+            $id_campagna = mysqli_insert_id($conn); 
+            //aggiunge player
+            foreach($players as $player){
+                if(empty($player)) continue; 
+                $sql = "INSERT INTO giocatoreavventura (user, id_avventura, accepted) VALUES (?,?,?)"; 
+                $stmt = mysqli_prepare($conn, $sql);  
+                $accepted = 0; 
+                mysqli_stmt_bind_param($stmt, "sii", $player, $id_campagna, $accepted); 
+                mysqli_stmt_execute($stmt); 
+            }
             ?>
             <!DOCTYPE html>
 <html>
@@ -61,5 +78,5 @@
 
 <?php
         }
-    }
+    } 
 ?> 

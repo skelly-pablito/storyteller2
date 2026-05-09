@@ -23,6 +23,50 @@
             }
         }
     }
+    function showCampagnePlayer(){
+        global $conn; 
+        $sql = "CREATE VIEW IF NOT EXISTS avventure_player AS 
+                SELECT *
+                FROM avventure AS a INNER JOIN giocatoreavventura AS ga 
+                ON a.id = ga.id_avventura;"; 
+        mysqli_query($conn, $sql);
+        
+        $user = $_SESSION["user"]["username"];
+        //Fetch inviti
+        $sql = "SELECT * FROM avventure_player WHERE user = ? AND accepted = 0";
+        $stmt = mysqli_prepare($conn, $sql); 
+        mysqli_stmt_bind_param($stmt, "s", $user);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt); 
+        if(mysqli_num_rows($res) > 0){
+            while($riga = $res->fetch_assoc()){
+                echo "<div class='w3-card w3-padding w3-margin w3-light-green' style='width:400px;'>
+                            <p class='title'>".$riga["titolo"]." </a></p>
+                            <p class='w3-opacity'> Master:".$riga["id_master"]."<br>".$riga["descrizione"]."</p> 
+                            <form action='aggiungiPlayer.php' method='post'>
+                            <input type='hidden' name='id_campagna' value='".$riga["id"]."'>
+                            <button class='w3-button w3-border w3-green' name='accept' value='1'>Accetta</button> 
+                            <button class='w3-button w3-border w3-green' name='accept' value='0'>Rifiuta</button>
+                        </form>
+                     </div>";
+            }
+        }
+        //Fetch campagne a cui partecipa
+        $sql = "SELECT * FROM avventure_player WHERE user = ? AND accepted = 1"; 
+        $stmt = mysqli_prepare($conn, $sql); 
+        mysqli_stmt_bind_param($stmt, "s", $user);
+
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt); 
+        if(mysqli_num_rows($res) > 0){
+            while($riga = $res->fetch_assoc()){
+                echo "<div class='w3-card w3-padding w3-margin w3-light-green' style='width:400px;'>
+                            <p class='title'><a href='dettagliCampagna.php?id=".$riga["id"]."'>".$riga["titolo"]." </a></p>
+                            <p class='w3-opacity'> Master:".$riga["id_master"]."<br>".$riga["descrizione"]."</p>  
+                     </div>";
+            }
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -56,27 +100,38 @@
             <h1> Benvenuto, <?php echo $_SESSION["user"]["username"]; ?></h1>
         </div>
 
-        <!-- SEZIONE 1-->
-        <div class="w3-container w3-margin-top w3-margin-left" style="width:20%"> 
-            <h3> Le tue campagne 
-                <a href="formCampagna.php"><button class="w3-button w3-right"><b>+</b></button></a>
-            </h3>  <hr>
-        </div>
-        <div class="w3-margin">
-            <!-- DIV ESEMPIO-->
-            <div class="w3-card w3-padding w3-margin w3-light-green" style="width:400px;">
-                <p class="title"><a href="">Titolo</a></p>
-                <p class="w3-opacity">Lorem ipsum dolor sit amet...</p>
-            </div>
-            <?php showCampagneMaster() ?>
-        </div>
+        <div class="">
+             <!-- SEZIONE 1-->
+             <div class="w3-container w3-margin-top w3-margin-left" style="width:20%"> 
+                 <h3> Le tue campagne 
+                     <a href="formCampagna.php"><button class="w3-button w3-right"><b>+</b></button></a>
+                 </h3>  <hr>
+             </div>
+             <div class="w3-margin">
+                 <!-- DIV ESEMPIO-->
+                 <div class="w3-card w3-padding w3-margin w3-light-green" style="width:400px;">
+                     <p class="title"><a href="">Titolo</a></p>
+                     <p class="w3-opacity">Lorem ipsum dolor sit amet...</p>
+                 </div>
+                 <?php showCampagneMaster() ?>
+             </div>
 
 
-        <!-- SEZIONE 2 --> 
-        <div class="w3-container w3-margin-top w3-margin-left" style="width:20%"> 
-             <h3> Campagne a cui partecipi 
-                <a><button class="w3-button w3-right"><b>+</b></button></a>
-            </h3>  <hr>
+             <!-- SEZIONE 2 --> 
+             <div class="w3-container w3-margin-top w3-margin-left" style="width:20%"> 
+                  <h3> Campagne a cui partecipi </h3>  <hr>
+                <!-- DIV ESEMPIO-->
+                <div class='w3-card w3-padding w3-margin w3-light-green' style='width:400px;'>
+                        <p class='title'><a href='dettagliCampagna.php?id=".$riga["id"]."'> Title </a></p>
+                        <p class='w3-opacity'> Master: TEST <br> Lorem ipsum dolor sit amet... </p> 
+                        <form action="aggiungiPlayer.php" method="post">
+                            <input type="hidden" name="id_campagna" value="1">
+                            <button class="w3-button w3-border w3-green" name="accept" value="1">Accetta</button> 
+                            <button class="w3-button w3-border w3-green" name="accept" value="0">Rifiuta</button>
+                        </form>
+                 </div>
+                 <?php showCampagnePlayer() ?>
+             </div>
         </div>
 
         <div class="w3-container w3-display-bottomleft w3-light-green">

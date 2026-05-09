@@ -39,8 +39,9 @@
             </div>
         </div>  
 
-        <div class="w3-container w3-margin-top w3-margin-left"> 
+        <div class="w3-card w3-green w3-display-middle w3-padding" style="width:50%"> 
             <h1><?php echo $riga["titolo"]; ?></h1>
+            <p><?php echo $riga["descrizione"]; ?> </p>
         </div>
 
         <div class="w3-container w3-display-bottomleft w3-light-green">
