@@ -1,16 +1,59 @@
 <?php
+    function isAllowed($user){
+        global $conn; 
+        $sql = "SELECT * FROM avventure WHERE id = ? AND id_master = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "is", $_GET["id"], $user);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+        if(mysqli_num_rows($res) > 0){
+            return true;
+        }else{
+             $sql = "SELECT * FROM giocatoreavventura WHERE id_avventura = ? AND user = ? AND accepted = 1";
+             $stmt = mysqli_prepare($conn, $sql);
+             mysqli_stmt_bind_param($stmt, "is", $_GET["id"], $user);
+             mysqli_stmt_execute($stmt);
+             $res = mysqli_stmt_get_result($stmt);
+             if(mysqli_num_rows($res) > 0){
+                return true;
+             }
+        }
+        return false;
+    }
+
+    function getPlayers(){
+        global $conn; 
+        $sql = "CREATE VIEW IF NOT EXISTS avventure_player AS 
+                SELECT *
+                FROM avventure AS a INNER JOIN giocatoreavventura AS ga 
+                ON a.id = ga.id_avventura;"; 
+        mysqli_query($conn, $sql);
+        
+        $user = $_SESSION["user"]["username"];
+        $sql = "SELECT user FROM avventure_player WHERE id = ? AND accepted = 1";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "i", $_GET["id"]);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+        if(mysqli_num_rows($res) > 0){
+            
+            while($riga = $res->fetch_assoc()){
+                echo "<li>".$riga["user"]."</li>";
+            }
+        }
+    }
+
     session_start();
     if(!isset($_SESSION["login"]))
         header("Location: loginForm.php");
     include "connect.php"; 
 
-    $sql = "SELECT * FROM avventure WHERE id=".$_GET["id"].";";
-    $res = mysqli_query($conn, $sql);
-    if(mysqli_num_rows($res) > 0){
+     if(!isAllowed($_SESSION["user"]["username"])){
+        header("Location: homepage.php");
+    }else{
+        $sql = "SELECT * FROM avventure WHERE id=".$_GET["id"].";";
+        $res = mysqli_query($conn, $sql);
         $riga = $res->fetch_assoc();
-        if($riga["id_master"] != $_SESSION["user"]["username"]){
-            header("Location: homepage.php");
-        }
     }   
 ?>
 <!DOCTYPE html>
@@ -20,6 +63,7 @@
         <meta charset="utf-8">
         <title>Storyteller</title>
         <link rel="stylesheet" href="w3.css">
+        <link rel="stylesheet" href="homestyles.css">
         <style>
             body, h1, h2, h3, h4, h5, h6 {
                  font-family: Georgia, serif;
@@ -39,9 +83,17 @@
             </div>
         </div>  
 
-        <div class="w3-card w3-green w3-display-middle w3-padding" style="width:50%"> 
+        <div class="w3-card w3-light-green w3-display-middle w3-padding" style="width:50%"> 
             <h1><?php echo $riga["titolo"]; ?></h1>
             <p><?php echo $riga["descrizione"]; ?> </p>
+
+            <div class="w3-container">
+                <p class="title">Giocatori:</p>
+                <ul>
+                    <?php getPlayers(); ?>
+                </ul>
+               
+            </div>
         </div>
 
         <div class="w3-container w3-display-bottomleft w3-light-green">
