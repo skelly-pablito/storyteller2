@@ -17,7 +17,7 @@
         if(mysqli_num_rows($res) > 0){
             while($riga = $res->fetch_assoc()){
                 echo "<div class='w3-card w3-padding w3-margin w3-light-green' style='width:400px;'>
-                            <p class='title'><a href='dettagliCampagna.php?id=".$riga["id"]."'>".$riga["titolo"]." </a></p>
+                            <p class='title'><a href='dettagliCampagna.php?id=".$riga["id"]."&accType=1'>".$riga["titolo"]." </a></p>
                             <p class='w3-opacity'>".$riga["descrizione"]."</p>
                      </div>";
             }
@@ -61,7 +61,7 @@
         if(mysqli_num_rows($res) > 0){
             while($riga = $res->fetch_assoc()){
                 echo "<div class='w3-card w3-padding w3-margin w3-light-green' style='width:400px;'>
-                            <p class='title'><a href='dettagliCampagna.php?id=".$riga["id"]."'>".$riga["titolo"]." </a></p>
+                            <p class='title'><a href='dettagliCampagna.php?id=".$riga["id"]."&accType=2'>".$riga["titolo"]." </a></p>
                             <p class='w3-opacity'> Master:".$riga["id_master"]."<br>".$riga["descrizione"]."</p>  
                      </div>";
             }
