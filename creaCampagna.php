@@ -57,7 +57,7 @@
     </head> 
     <body>
          <div class="w3-container w3-light-green">
-            <h2 class="w3-left">Storyteller</h2>
+            <h2 class="w3-left"><a class="w3-button" href="homepage.php">Storyteller</a></h2>
             <div class="w3-right"> 
                 <a href="logout.php" class="w3-button"> <img width="25px" height="25px" src="box-arrow-right.svg"> </a>
 

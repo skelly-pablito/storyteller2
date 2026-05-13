@@ -89,10 +89,10 @@
     </head> 
     <body>
         <div class="w3-container w3-light-green">
-            <h2 class="w3-left">Storyteller</h2>
-            <div class="w3-right"> 
+            <h2 class="w3-left"><a class="w3-button" href="homepage.php">Storyteller</a></h2>
+            <div class="w3-right w3-flex" style="align-items: center; gap: 5px;"> 
+                <a href="personaggi.php"> <button class="w3-button w3-border w3-green">Personaggi</button></a>
                 <a href="logout.php" class="w3-button"> <img width="25px" height="25px" src="box-arrow-right.svg"> </a>
-
             </div>
         </div>
 
