@@ -43,6 +43,45 @@
         }
     }
 
+    function showPersonaggi($user){
+        global $conn; 
+        $sql = "SELECT p.id, p.nome, p.livello FROM personaggi AS p WHERE p.id_utente = ? AND NOT EXISTS
+                (SELECT * FROM personaggiavventura AS pa WHERE p.id = pa.id_personaggio AND pa.id_avventura = ?)";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "si", $user, $_GET["id"]);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+        if(mysqli_num_rows($res) > 0){
+            while($riga = $res->fetch_assoc()){
+                 echo "<div class='w3-card w3-padding w3-margin w3-green' style='width:400px;align:center;'>
+                            <p> <span class='title'><a href='aggiungiPg.php?id=" . $riga["id"] . "&id_campagna=" . $_GET["id"] . "'>". $riga["nome"] . "</a></span>
+                            Livello: " . $riga["livello"] . "</p> 
+                        </div>";
+            }
+        }else{
+            echo "<p>Non hai personaggi disponibili</p>";
+        }
+    }
+
+    function showPersonaggiCampagna(){
+        global $conn; 
+        $sql = "SELECT id, nome, livello FROM personaggi AS p INNER JOIN personaggiavventura AS pa ON p.id = pa.id_personaggio WHERE pa.id_avventura = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "i", $_GET["id"]);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+        if(mysqli_num_rows($res) > 0){
+            while($riga = $res->fetch_assoc()){
+                 echo "<div class='w3-card w3-padding w3-margin w3-green' style='width:400px;align:center;'>
+                            <p> <span class='title'><a href='dettagliPersonaggio.php?id=" . $riga["id"] . "'>". $riga["nome"] . "</a></span>
+                            Livello: " . $riga["livello"] . "</p> 
+                        </div>";
+            }
+        }else{
+            echo "<p>Nessun personaggio presente</p>";
+        }
+    }
+
     session_start();
     if(!isset($_SESSION["login"]))
         header("Location: loginForm.php");
@@ -73,6 +112,16 @@
                 background-repeat: repeat;
             }
         </style>
+        <script>
+        function charDropdown() {
+            var x = document.getElementById("charoptions");
+            if (x.className.indexOf("w3-show") == -1) { 
+                x.className += " w3-show";
+            } else {
+              x.className = x.className.replace(" w3-show", "");
+             }
+        }
+        </script>
     </head> 
     <body>
         <div class="w3-container w3-light-green" >
@@ -100,11 +149,38 @@
 
             <div class="w3-card w3-light-green  w3-padding" style="width:30%;margin-left:20px;"> 
                 <h1>Personaggi
-                    <a href="formPersonaggio.php"><button class="w3-button w3-right"><b>+</b></button></a>
-                </h1> <hr>
-
-
+                    <?php
+                        if($_GET["accType"] == 2){?>
+                            <div class="w3-dropdown-click"> 
+                                <button onclick="charDropdown()" class="w3-button w3-right"><b>+</b></button> </h1> 
+                                <div id="charoptions" class="w3-dropdown-content w3-bar-block"> 
+                                    <a href="formPersonaggio.php" class="w3-bar-item w3-button">Crea Personaggio</a>
+                                    <a class="w3-bar-item w3-button" onclick="document.getElementById('id01').style.display='block'">Scegli esistente</a>
+                            </div>
+                            <hr>
+                           
+                        <?php showPersonaggiCampagna();
+                        }else {?>
+                            </h1><hr> <?php
+                            showPersonaggiCampagna();
+                   } ?>
             </div>
+        </div>
+
+        <!-- Modal per scegliere personaggio esistente -->
+        <div id="id01" class="w3-modal">
+            <div class="w3-modal-content w3-light-green" style="width:25%;height:50%;"> 
+                <button class="w3-button w3-display-topright" onclick="document.getElementById('id01').style.display='none'">x</button>
+                <div class="w3-container " >
+                    <h2>Scegli un personaggio</h2>
+                        <hr> 
+                    <div class="w3-middle">
+                    <?php
+                        showPersonaggi($_SESSION["user"]["username"]); 
+                    ?> 
+                    </div>
+                </div>
+            </div>  
         </div>
 
         <div class="w3-container w3-display-bottomleft w3-light-green">

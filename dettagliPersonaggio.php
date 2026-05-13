@@ -9,7 +9,21 @@
         if(mysqli_num_rows($res) > 0){
             return true;
         }else{
-            return false;
+                $sql = "SELECT a.id_master FROM personaggiavventura AS pa INNER JOIN avventure AS a ON pa.id_avventura = a.id WHERE pa.id_personaggio = ?";
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "i", $_GET["id"]);
+                mysqli_stmt_execute($stmt);
+                $res = mysqli_stmt_get_result($stmt);
+                if(mysqli_num_rows($res) > 0){
+                    $riga = mysqli_fetch_assoc($res);
+                    if($riga["id_master"] == $user){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
         }
     }
 
@@ -32,7 +46,7 @@
         <meta charset="utf-8">
         <title>Storyteller</title>
         <link rel="stylesheet" href="w3.css">
-        <link rel="stylesheet" href="homestyles.css">
+        <link rel="stylesheet" href="charstyles.css">
         <style>
             body, h1, h2, h3, h4, h5, h6 {
                  font-family: Georgia, serif;
@@ -40,6 +54,12 @@
             body {
                 background-image: url("green-stone-seamless-web-texture.jpg");
                 background-repeat: repeat;
+            }
+            table, tr, td, th{
+                 font-size: 20px;
+            }
+            td{
+                text-align: center;
             }
         </style>
     </head> 
@@ -54,11 +74,38 @@
 
         <div class="w3-flex w3-margin-top w3-margin-left" style="height:100%;justify-content:center;align-items:center;">
             <!-- SEZIONE 1-->
-            <div class="w3-card w3-light-green  w3-padding" style="width:50%"> 
-                <h1><?php echo $riga["nome"]; ?></h1>
-                <p>Livello: <?php echo $riga["livello"]; ?> </p>
-
+            <div class="w3-card w3-light-green w3-padding" style="width:50%;height:750px;"> 
+                <div class="w3-flex w3-margin-top" style="justify-content:space-around;">
+                    <p class="big"><?php echo $riga["nome"]; ?></p>
+                </div>
                 
+
+                <div class="w3-flex w3-margin-top" style="justify-content:space-around;">
+                   <p class="medium">Livello: <?php echo $riga["livello"]; ?> </p> 
+                   <p class="medium">Classe: <?php echo $riga["classe"]; ?> </p>
+                    <p class="medium">Razza: <?php echo $riga["razza"]; ?> </p> 
+                </div>
+             
+                <div class="w3-flex w3-margin-top" style="justify-content:space-around;">
+                <table>
+                    <tr>
+                        <th>Forza</th>
+                        <th>Destrezza</th>
+                        <th>Costituzione</th>
+                        <th>Intelligenza</th>
+                        <th>Saggezza</th>
+                        <th>Carisma</th>
+                    </tr>
+                    <tr>
+                        <td><?php echo $riga["FORZA"]; ?></td>
+                        <td><?php echo $riga["DESTREZZA"]; ?></td>
+                        <td><?php echo $riga["COSTITUZIONE"]; ?></td>
+                        <td><?php echo $riga["INTELLIGENZA"]; ?></td>
+                        <td><?php echo $riga["SAGGEZZA"]; ?></td>
+                        <td><?php echo $riga["CARISMA"]; ?></td>
+                    </tr>
+                </table>
+                </div>  
             </div>
 
             
