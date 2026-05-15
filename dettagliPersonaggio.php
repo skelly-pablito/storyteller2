@@ -9,18 +9,23 @@
         if(mysqli_num_rows($res) > 0){
             return true;
         }else{
-                $sql = "SELECT a.id_master FROM personaggiavventura AS pa INNER JOIN avventure AS a ON pa.id_avventura = a.id WHERE pa.id_personaggio = ?";
+                $sql = "CREATE VIEW IF NOT EXISTS avventure_player AS 
+                    SELECT *
+                    FROM avventure AS a INNER JOIN giocatoreavventura AS ga 
+                     ON a.id = ga.id_avventura;"; 
+                mysqli_query($conn, $sql);
+
+                $sql = "SELECT v.id_master, v.user FROM avventure_player AS v INNER JOIN PersonaggiAvventura as pa WHERE pa.id_personaggio=?;";
                 $stmt = mysqli_prepare($conn, $sql);
                 mysqli_stmt_bind_param($stmt, "i", $_GET["id"]);
                 mysqli_stmt_execute($stmt);
                 $res = mysqli_stmt_get_result($stmt);
                 if(mysqli_num_rows($res) > 0){
-                    $riga = mysqli_fetch_assoc($res);
-                    if($riga["id_master"] == $user){
-                        return true;
-                    }else{
-                        return false;
+                    while($riga = mysqli_fetch_assoc($res)){
+                        if($riga["id_master"] == $user || $riga["user"] == $user)
+                            return true;
                     }
+                    return false; 
                 } else {
                     return false;
                 }
@@ -46,7 +51,7 @@
         <meta charset="utf-8">
         <title>Storyteller</title>
         <link rel="stylesheet" href="w3.css">
-        <link rel="stylesheet" href="charstyles.css">
+        <link rel="stylesheet" href="charStyle.css">
         <style>
             body, h1, h2, h3, h4, h5, h6 {
                  font-family: Georgia, serif;

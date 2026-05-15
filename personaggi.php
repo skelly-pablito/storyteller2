@@ -14,7 +14,8 @@
                             Livello: " . $riga["livello"] . "</p> 
                         </div>"; 
             }
-        }
+        }else 
+            echo "<p>Non hai creato personaggi.</p>";
                             
     }
     session_start();
@@ -54,10 +55,6 @@
                 <h1>Personaggi
                     <a href="formPersonaggio.php"><button class="w3-button w3-right"><b>+</b></button></a>
                 </h1> <hr>
-
-                <div class="w3-card w3-padding w3-margin w3-green" style="width:400px;">
-                            <p> <span class="title"><a href="dettagliPersonaggio.php?id=1">Title</a></span>Livello: 1</p> 
-                </div>
 
                 <?php showPersonaggi(); ?>
             </div>

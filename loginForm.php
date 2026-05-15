@@ -21,10 +21,21 @@
                 background-repeat: repeat;
             }
         </style>
+        <script>
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+            if(error !== null){
+                if(error == 1){
+                    alert("Password errata");
+                }else if(error == 2){
+                    alert("Username non esistente");
+                }
+        }
+        </script>
     </head> 
     <body>
         <div class="w3-container w3-light-green">
-            <h2>Storyteller</h3>
+            <h2>Storyteller</h2>
         </div>
 
 

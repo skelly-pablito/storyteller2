@@ -12,5 +12,5 @@
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, "ii", $idPg, $id_campagna);
     if(mysqli_stmt_execute($stmt))
-        header("Location: dettagliCampagna.php?id=" . $id_campagna."&acctype=2");
+        header("Location: dettagliCampagna.php?id=" . $id_campagna."&accType=2");
 ?> 

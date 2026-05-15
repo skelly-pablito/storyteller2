@@ -23,10 +23,10 @@
                 $_SESSION["user"] = $riga; 
                 header("Location: homepage.php");
              }else{
-                echo "Password errata"; 
+                header("Location: loginForm.php?error=1");
              }
         }else{
-            echo "Utente inesistente"; 
+            header("Location: loginForm.php?error=2");
         }
     }else{
         header("Location loginForm.php");

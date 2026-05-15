@@ -112,6 +112,7 @@
                 background-repeat: repeat;
             }
         </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script>
         function charDropdown() {
             var x = document.getElementById("charoptions");
@@ -121,6 +122,29 @@
               x.className = x.className.replace(" w3-show", "");
              }
         }
+
+        function addPlayer(){
+                const input = document.getElementById("playerInput");
+                const player = input.value.trim();
+                const id_campagna = <?php echo $_GET["id"]; ?>;
+                if(player !== ""){
+                    $.post("controllaPlayer.php", {username: player, campagna: id_campagna}, function(data, status){
+                        if(data == "200"){
+                            const playerList = document.getElementById("players");
+                            const dispPlayers = document.getElementById("dispPlayers");
+                            playerList.value += player + ",";
+                            input.value = "";
+                            dispPlayers.innerHTML += "<li>" + player + "</li>";
+                        } else if(data == "404"){ 
+                            alert("Il giocatore " + player + " non esiste.");           
+                        } else if(data == "400"){
+                            alert("Il giocatore " + player + " è già associato alla campagna.");
+                        } else {
+                            alert("Si è verificato un errore. Riprova.");
+                        }   
+                    }); 
+                }
+            }
         </script>
     </head> 
     <body>
@@ -139,7 +163,12 @@
                 <p><?php echo $riga["descrizione"]; ?> </p>
 
                 <div class="w3-container">
-                    <p class="title">Giocatori:</p>
+                    <p class="title">Giocatori: <?php
+                        if($_GET["accType"] == 1){
+                            ?> <button onclick="document.getElementById('id02').style.display='block'" class="w3-button"><b>+</b></button> </h1> <?php
+                        }
+                        
+                    ?></p>
                     <ul>
                         <?php getPlayers(); ?>
                     </ul>
@@ -170,7 +199,7 @@
         <!-- Modal per scegliere personaggio esistente -->
         <div id="id01" class="w3-modal">
             <div class="w3-modal-content w3-light-green" style="width:25%;height:50%;"> 
-                <button class="w3-button w3-display-topright" onclick="document.getElementById('id01').style.display='none'">x</button>
+                <button class="w3-button w3-display-topright" onclick="document.getElementById('id01').style.display='none'; charDropdown()">x</button>
                 <div class="w3-container " >
                     <h2>Scegli un personaggio</h2>
                         <hr> 
@@ -182,6 +211,33 @@
                 </div>
             </div>  
         </div>
+
+        <!--Modal Invito giocatore-->
+        <div id="id02" class="w3-modal">
+            <div class="w3-modal-content w3-light-green" style="width:25%;height:50%;"> 
+                <button class="w3-button w3-display-topright" onclick="document.getElementById('id02').style.display='none'">x</button>
+                <div class="w3-container " >
+                    <h2>Invita giocatori</h2>
+                        <hr> 
+                    <div class="w3-middle">
+                         <form class="w3-container" action="invitaPlayer.php" method="post">
+                            <div class="w3-flex" style="height:40px">
+                                <input class="w3-input" type="text" id="playerInput"> 
+                                <button class="w3-button w3-border w3-green" type="button" onclick="addPlayer()">Aggiungi</button>
+                            </div>
+                            <ul id="dispPlayers">
+
+                            </ul>
+                            <input type="hidden" name="players" id="players">
+                            <input type="hidden" name="id_campagna" value="<?php echo $_GET["id"];?>">
+                            <button class="w3-button w3-border w3-margin w3-green" type="submit">Invita</button>
+                        </form>
+                    </div>
+                </div>
+            </div>  
+        </div>
+
+
 
         <div class="w3-container w3-display-bottomleft w3-light-green">
             <h6>Un progetto di Paolo Colombo</h6>
