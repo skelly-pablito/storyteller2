@@ -52,7 +52,7 @@
         <title>Storyteller</title>
         <link rel="stylesheet" href="w3.css">
         <link rel="stylesheet" href="charStyle.css">
-        <style>
+        <style> 
             body, h1, h2, h3, h4, h5, h6 {
                  font-family: Georgia, serif;
             }
@@ -65,15 +65,20 @@
             }
             td{
                 text-align: center;
+                padding: 25px; 
+                border-top : 1px solid black;
+            }
+            th{
+                 padding: 5px;
             }
         </style>
     </head> 
     <body>
         <div class="w3-container w3-light-green" >
             <h2 class="w3-left"><a class="w3-button" href="homepage.php">Storyteller</a></h2>
-            <div class="w3-right"> 
+            <div class="w3-right w3-flex" style="align-items: center; gap: 5px;"> 
+                <a href="personaggi.php"> <button class="w3-button w3-border w3-green">Personaggi</button></a>
                 <a href="logout.php" class="w3-button"> <img width="25px" height="25px" src="box-arrow-right.svg"> </a>
-
             </div>
         </div> 
 
@@ -86,9 +91,9 @@
                 
 
                 <div class="w3-flex w3-margin-top" style="justify-content:space-around;">
-                   <p class="medium">Livello: <?php echo $riga["livello"]; ?> </p> 
-                   <p class="medium">Classe: <?php echo $riga["classe"]; ?> </p>
-                    <p class="medium">Razza: <?php echo $riga["razza"]; ?> </p> 
+                   <p class="medium"><b>Livello: </b><?php echo $riga["livello"]; ?> </p> 
+                   <p class="medium"><b>Classe: </b><?php echo $riga["classe"]; ?> </p>
+                    <p class="medium"><b>Razza: </b><?php echo $riga["razza"]; ?> </p> 
                 </div>
              
                 <div class="w3-flex w3-margin-top" style="justify-content:space-around;">

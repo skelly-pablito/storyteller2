@@ -82,6 +82,26 @@
         }
     }
 
+    function showPartite(){
+        global $conn; 
+        $sql = "SELECT * FROM partite WHERE id_avventura = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, "i", $_GET["id"]);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+        if(mysqli_num_rows($res) > 0){
+            while($riga = $res->fetch_assoc()){
+                 echo "<div class='w3-card w3-padding w3-margin w3-green' style='width:400px;align:center;'>
+                            <p> <span class='title'>" . $riga["numero"] . ". " . $riga["titolo"] . "</span>
+                             " . $riga["data_svolgimento"] ."
+                             <br>" . $riga["descrizione"] . "</p> 
+                        </div>";
+            }
+        }else{
+            echo "<p>Nessuna partita presente</p>";
+        }
+    }
+
     session_start();
     if(!isset($_SESSION["login"]))
         header("Location: loginForm.php");
@@ -150,9 +170,9 @@
     <body>
         <div class="w3-container w3-light-green" >
             <h2 class="w3-left"><a class="w3-button" href="homepage.php">Storyteller</a></h2>
-            <div class="w3-right"> 
+            <div class="w3-right w3-flex" style="align-items: center; gap: 5px;"> 
+                <a href="personaggi.php"> <button class="w3-button w3-border w3-green">Personaggi</button></a>
                 <a href="logout.php" class="w3-button"> <img width="25px" height="25px" src="box-arrow-right.svg"> </a>
-
             </div>
         </div> 
 
@@ -195,6 +215,27 @@
                    } ?>
             </div>
         </div>
+
+        <<div class="w3-flex w3-margin-top w3-margin-left" style="height:100%;justify-content:center;align-items:center;"> 
+            <div class="w3-card w3-light-green w3-padding w3-margin-top w3-margin-left" style="width:50%;max-height:450px;overflow: auto;"> 
+                <div style="position:absolute;z-index:1;height:75px;width:auto;background-color:#8bc34a">
+                    <p class="title">Partite 
+                             <?php if($_GET["accType"] == 1){
+                                 ?> <a href="formPartita.php?id=<?php echo $_GET["id"]; ?>"><button class="w3-button"><b>+</b></button></a> </h1> <?php
+                             } ?>
+                    </p>
+                </div>
+                    
+
+               <div class="w3-container w3-flex" style="flex-wrap:wrap;position:relative;top:75px;z-index:0;">
+                    <?php showPartite(); ?>
+               </div>
+            </div>
+        </div>
+
+
+
+
 
         <!-- Modal per scegliere personaggio esistente -->
         <div id="id01" class="w3-modal">

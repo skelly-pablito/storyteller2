@@ -1,27 +1,11 @@
-<?php
-    session_start(); 
-    if(!isset($_SESSION["login"]))
+<?php 
+    session_start();
+    if(!isset($_SESSION["login"])){
         header("Location: index.php");
-    include "connect.php";
-    if($_SERVER["REQUEST_METHOD"] == "POST"){
-        $nome = $_POST["nome"];
-        $livello = $_POST["livello"];
-        $classe = $_POST["classe"];
-        $razza = $_POST["razza"];
-        $for = $_POST["for"];
-        $des = $_POST["des"];
-        $cos = $_POST["cos"];
-        $int = $_POST["int"];
-        $sag = $_POST["sag"];
-        $car = $_POST["car"];
-
-        $user = $_SESSION["user"]["username"]; 
-        $sql = "INSERT INTO personaggi (nome, livello, classe, razza, forza, destrezza, costituzione, intelligenza, saggezza, carisma, id_utente) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "sissiiiiiis", $nome, $livello, $classe, $razza, $for, $des, $cos, $int, $sag, $car, $user);
-        mysqli_stmt_execute($stmt); 
     }
-?>
+
+
+?> 
 <!DOCTYPE html>
 <html>
     <head> 
@@ -37,20 +21,33 @@
                 background-image: url("green-stone-seamless-web-texture.jpg");
                 background-repeat: repeat;
             }
+            textarea {
+                resize: none;
+            }
         </style>
     </head> 
     <body>
-         <div class="w3-container w3-light-green">
+        <div class="w3-container w3-light-green">
             <h2 class="w3-left"><a class="w3-button" href="homepage.php">Storyteller</a></h2>
             <div class="w3-right w3-flex" style="align-items: center; gap: 5px;"> 
                 <a href="personaggi.php"> <button class="w3-button w3-border w3-green">Personaggi</button></a>
                 <a href="logout.php" class="w3-button"> <img width="25px" height="25px" src="box-arrow-right.svg"> </a>
             </div>
         </div>
-        
-        <div class="w3-container w3-padding-48 w3-display-middle w3-light-green" style="width:1000px"> 
-            <h1>Personaggio creato!</h1>
-            <p>Per tornare alla homepage, <a href="homepage.php">clicca qui.</a></p>
+
+        <div class="w3-container w3-display-middle"> 
+            <h1> Crea una nuova partita </h1> 
+            <div class="w3-card w3-padding w3-light-green w3-animate-bottom" style="width:400px;">
+                
+                <h3> Inserisci i dettagli della partita: </h3>
+                <form class="w3-container" action="creaPartita.php" method="post">
+                    <label>Titolo della partita:</label> <input class="w3-input" type="text" name="titolo" required> <br>
+                    <label>Descrizione:</label> <textarea class="w3-input" maxlength="255" rows="5" name="desc"></textarea> <br>
+                    <label>Data della partita:</label> <input class="w3-input" type="date" name="data" required> <br>
+                    <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">
+                    <button class="w3-button w3-border w3-margin w3-green" type="submit"> Crea </button>
+                </form>
+            </div>
         </div>
 
         <div class="w3-container w3-display-bottomleft w3-light-green">
