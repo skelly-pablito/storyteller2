@@ -40,6 +40,8 @@
             while($riga = $res->fetch_assoc()){
                 echo "<li>".$riga["user"]."</li>";
             }
+        }else{
+            echo "<p>Nessun giocatore associato alla campagna.</p>";
         }
     }
 
@@ -59,7 +61,7 @@
                         </div>";
             }
         }else{
-            echo "<p>Non hai personaggi disponibili</p>";
+            echo "<p>Non hai personaggi disponibili.</p>";
         }
     }
 
@@ -78,7 +80,7 @@
                         </div>";
             }
         }else{
-            echo "<p>Nessun personaggio presente</p>";
+            echo "<p>Nessun personaggio associato alla campagna.</p>";
         }
     }
 
@@ -98,7 +100,7 @@
                         </div>";
             }
         }else{
-            echo "<p>Nessuna partita presente</p>";
+            echo "<p>Nessuna partita presente.</p>";
         }
     }
 
@@ -217,7 +219,7 @@
         </div>
 
         <<div class="w3-flex w3-margin-top w3-margin-left" style="height:100%;justify-content:center;align-items:center;"> 
-            <div class="w3-card w3-light-green w3-padding w3-margin-top w3-margin-left" style="width:50%;max-height:450px;overflow: auto;"> 
+            <div class="w3-card w3-light-green w3-padding w3-margin-top w3-margin-left" style="width:50%;min-height:300px;max-height:450px;overflow: auto;"> 
                 <div style="position:absolute;z-index:1;height:75px;width:auto;background-color:#8bc34a">
                     <p class="title">Partite 
                              <?php if($_GET["accType"] == 1){
